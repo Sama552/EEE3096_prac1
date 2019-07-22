@@ -10,24 +10,50 @@ Date: <21/07/2019>
 """
 
 # import Relevant Librares
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
+from itertools import product
+import time
+
+# public variables
+binaryValues = list(product(range(2), repeat=3))
+count = 0
 
 # Logic that you write
 def main():
-    print("write your logic here")
+    countUp()
+    refreshLEDs()
+    time.sleep(1)
 
+def countUp():
+    global count
+    if (count == 7):
+        count = 0
+    else:
+        count = count + 1
 
-# Only run the functions if 
+def countDown():
+    global count
+    if (count == 0):
+        count = 7
+    else:
+        count = count - 1
+
+def refreshLEDs():
+    global binaryValues
+    global count
+    print(binaryValues[count]);
+
+# Only run the functions if
 if __name__ == "__main__":
     # Make sure the GPIO is stopped correctly
     try:
-        while True:
+        while(True):
             main()
     except KeyboardInterrupt:
         print("Exiting gracefully")
         # Turn off your GPIOs here
-        GPIO.cleanup()
+        # GPIO.cleanup()
     except e:
-        GPIO.cleanup()
+        # GPIO.cleanup()
         print("Some other error occurred")
         print(e.message)
