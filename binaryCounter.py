@@ -22,26 +22,40 @@ GPIO.setwarnings(False)
 GPIO.setup(17, GPIO.OUT)
 GPIO.setup(27, GPIO.OUT)
 GPIO.setup(22, GPIO.OUT)
+GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(24, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+time_stamp = time.time()
+
+def countUp(channel):
+    global time_stamp
+    time_now = time.time()
+    if (time_now - time_stamp >= 0.3):
+        global count
+        if (count == 7):
+            count = 0
+        else:
+            count = count + 1
+    time_stamp = time.time()
+    refreshLEDs()
+
+def countDown(channel):
+    global time_stamp
+    time_now = time.time()
+    if (time_now - time_stamp >= 0.3):
+        global count
+        if (count == 0):
+            count = 7
+        else:
+            count = count - 1
+    time_stamp = time.time()
+    refreshLEDs()
+
+GPIO.add_event_detect(23, GPIO.RISING, callback=countUp)
+GPIO.add_event_detect(24, GPIO.RISING, callback=countDown)
 
 # Logic that you write
 def main():
-    countUp()
-    refreshLEDs()
     time.sleep(1)
-
-def countUp():
-    global count
-    if (count == 7):
-        count = 0
-    else:
-        count = count + 1
-
-def countDown():
-    global count
-    if (count == 0):
-        count = 7
-    else:
-        count = count - 1
 
 def refreshLEDs():
     global binaryValues
